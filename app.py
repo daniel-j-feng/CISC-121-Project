@@ -7,9 +7,11 @@ stopCounts = []
 def addStop(name, count):
     if name in stopNames:
         raise gr.Error("Stop Already Exists")
-    stopNames.append(name)
-    stopCounts.append(count)
-    return plotStops()
+        return
+    else:
+        stopNames.append(name)
+        stopCounts.append(count)
+        return plotStops()
 
 def removeStop(name):
     if name in stopNames:
