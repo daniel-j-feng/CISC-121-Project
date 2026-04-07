@@ -1,28 +1,30 @@
 import gradio as gr
 import matplotlib.pyplot as plt
 
-stop_names = []
-stop_counts = []
+stopNames = []
+stopCounts = []
 
 def addStop(name, count):
-    stop_names.append(name)
-    stop_counts.append(count)
+    if name in stopNames:
+        raise gr.Error("Stop Already Exists")
+    stopNames.append(name)
+    stopCounts.append(count)
     return plotStops()
 
 def removeStop(name):
-    if name in stop_names:
-        idx = stop_names.index(name)
-        stop_names.pop(idx)
-        stop_counts.pop(idx)
+    if name in stopNames:
+        idx = stopNames.index(name)
+        stopNames.pop(idx)
+        stopCounts.pop(idx)
     return plotStops()
 
 def plotStops():
     fig, ax = plt.subplots()
-    ax.bar(stop_names, stop_counts, color="steelblue")
+    ax.bar(stopNames, stopCounts, color="steelblue")
     ax.set_xlabel("Stop"); ax.set_ylabel("Crowd Count")
     return fig
 
-def sortStops():
+def sortStopsQuick():
 
 
 with gr.Blocks() as app:
