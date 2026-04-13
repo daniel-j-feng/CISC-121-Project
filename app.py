@@ -1,5 +1,6 @@
 import gradio as gr
 import matplotlib.pyplot as plt
+import time
 
 stopNames = []
 stopCounts = []
@@ -38,58 +39,45 @@ def sortStopsQuick(low, high):
     newPivotLocation = low
     for i in range(low,high):
         if stopCounts[i] < stopCounts[pivotLocation]:
-            frames.append((stopCounts.copy(), i, i, newPivotLocation))
+            frames.append((stopCounts.copy(), stopNames.copy(), i, i, newPivotLocation, pivotLocation, -1))
             stopCounts[i], stopCounts[newPivotLocation] = stopCounts[newPivotLocation], stopCounts[i]
             stopNames[i], stopNames[newPivotLocation] = stopNames[newPivotLocation], stopNames[i]
             newPivotLocation += 1
         else:
-            frames.append((stopCounts.copy(), i, -1, -1))
+            frames.append((stopCounts.copy(), stopNames.copy(), i, i, newPivotLocation, pivotLocation, -1))
     stopCounts[pivotLocation], stopCounts[newPivotLocation] = stopCounts[newPivotLocation], stopCounts[pivotLocation]
     stopNames[pivotLocation], stopNames[newPivotLocation] = stopNames[newPivotLocation], stopNames[pivotLocation]
+    frames.append((stopCounts.copy(), stopNames.copy(), -1, -1, -1, newPivotLocation, newPivotLocation))
     sortStopsQuick(newPivotLocation + 1, high)
     sortStopsQuick(low, newPivotLocation - 1)
-
-def sortAndDisplay():
-    sortStopsQuick(0, len(stopCounts) - 1)
-    fig, ax = plt.subplots()
-    ax.bar(stopNames, stopCounts)
-    ax.set_xlabel("Stops")
-    ax.set_ylabel("Count")
-    ax.set_title("Sorted Stop Counts")
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    return fig
 
 def startSort():
     frames.clear()
     current_frame[0] = 0
-    tempCounts = stopCounts.copy()
-    tempNames = stopNames.copy()
     sortStopsQuick(0, len(stopCounts) - 1)
-    stopCounts[:] = tempCounts
-    stopNames[:] = tempNames
-    return plotStops()
-
-def nextStep():
-    if current_frame[0] >= len(frames):
-        return plotStops()
-    data, looking, swap1, swap2 = frames[current_frame[0]]
-    current_frame[0] += 1
-    colors = []
-    for i in range(len(data)):
-        if i == looking:
-            colors.append('yellow')
-        elif i == swap1 or i == swap2:
-            colors.append('red')
-        else:
-            colors.append('steelblue')
-    fig, ax = plt.subplots()
-    ax.bar(stopNames, data, color=colors)
-    ax.set_xlabel("Stops")
-    ax.set_ylabel("Count")
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    return fig
+    
+    for frame in frames:
+        data, names, looking, swap1, swap2, pivot, justSwapped = frame
+        colors = []
+        for i in range(len(data)):
+            if i == pivot:
+                colors.append('orange')
+            elif i == justSwapped:
+                colors.append('pink')
+            elif i == swap1 or i == swap2:
+                colors.append('purple')
+            elif i == looking:
+                colors.append('yellow')
+            else:
+                colors.append('steelblue')
+        fig, ax = plt.subplots()
+        ax.bar(names, data, color=colors)
+        ax.set_xlabel("Stops")
+        ax.set_ylabel("Count")
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+        yield fig
+        time.sleep(0.5)
 
 with gr.Blocks() as app:
     with gr.Row():
@@ -99,13 +87,11 @@ with gr.Blocks() as app:
     remove_in = gr.Textbox(label="Remove Stop by Name")
     remove_btn = gr.Button("Remove Stop")
     sort_in = gr.Textbox(label = "Sort Stops by Crowd")
-    sort_btn = gr.Button("Prepare Sorting")
-    next_btn = gr.Button("Next Sort Step")
+    sort_btn = gr.Button("Sort Stops")
     chart = gr.Plot()
 
     add_btn.click(addStop, [name_in, count_in], chart)
     remove_btn.click(removeStop, remove_in, chart)
     sort_btn.click(startSort, None, chart)
-    next_btn.click(nextStep, None, chart)
     
 app.launch()
