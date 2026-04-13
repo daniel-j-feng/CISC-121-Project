@@ -1,6 +1,7 @@
 import gradio as gr
 import matplotlib.pyplot as plt
 import time
+from matplotlib.patches import Patch
 
 stopNames = []
 stopCounts = []
@@ -62,22 +63,26 @@ def startSort():
         for i in range(len(data)):
             if i == pivot:
                 colors.append('orange')
-            elif i == justSwapped:
-                colors.append('pink')
-            elif i == swap1 or i == swap2:
+            elif i == swap1:
                 colors.append('purple')
-            elif i == looking:
-                colors.append('yellow')
+            elif i == swap2:
+                colors.append('pink')
             else:
                 colors.append('steelblue')
         fig, ax = plt.subplots()
         ax.bar(names, data, color=colors)
         ax.set_xlabel("Stops")
         ax.set_ylabel("Count")
+        legend_elements = [
+            Patch(facecolor='orange', label='Pivot'),
+            Patch(facecolor='purple', label='Current Pointer'),
+            Patch(facecolor='pink', label='Tentative New Pivot Location'),
+        ]
+        ax.legend(handles=legend_elements, loc='upper left')
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
         yield fig
-        time.sleep(0.5)
+        time.sleep(1)
 
 with gr.Blocks() as app:
     with gr.Row():
