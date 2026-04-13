@@ -7,7 +7,7 @@ stopCounts = []
 def addStop(name, count):
     if name in stopNames:
         raise gr.Error("Stop Already Exists")
-        return
+        return plotStops()
     else:
         stopNames.append(name)
         stopCounts.append(count)
@@ -26,7 +26,22 @@ def plotStops():
     ax.set_xlabel("Stop"); ax.set_ylabel("Crowd Count")
     return fig
 
-def sortStopsQuick():
+def sortStopsQuick(low, high):
+    if low >= high:
+        return;
+    pivot = (low + high)//2
+    stopCounts[pivot], stopCounts[high] = stopCounts[high], stopCounts[pivot]
+    pivotLocation = high
+    newPivotLocation = low
+    for i in range(low,high):
+        if stopCounts[i] < stopCount[pivotLocation]:
+            stopCounts[i], stopCounts[newPivotLocation] = stopCounts[newPivotLocation], stopCounts[i]
+            newPivotLocation += 1
+    stopCounts[pivotLocation], stopCounts[newPivotLocation] = stopCounts[newPivotLocation], stopCounts[pivotLocation]
+    sortStopsQuick(newPivotLocation + 1, high)
+    sortStopsQuick(low, newPivotLocation - 1)
+    
+
 
 
 with gr.Blocks() as app:
