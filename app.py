@@ -28,21 +28,29 @@ def plotStops():
 
 def sortStopsQuick(low, high):
     if low >= high:
-        return;
+        return plotStops()
     pivot = (low + high)//2
     stopCounts[pivot], stopCounts[high] = stopCounts[high], stopCounts[pivot]
     pivotLocation = high
     newPivotLocation = low
     for i in range(low,high):
-        if stopCounts[i] < stopCount[pivotLocation]:
+        if stopCounts[i] < stopCounts[pivotLocation]:
             stopCounts[i], stopCounts[newPivotLocation] = stopCounts[newPivotLocation], stopCounts[i]
             newPivotLocation += 1
     stopCounts[pivotLocation], stopCounts[newPivotLocation] = stopCounts[newPivotLocation], stopCounts[pivotLocation]
     sortStopsQuick(newPivotLocation + 1, high)
     sortStopsQuick(low, newPivotLocation - 1)
-    
 
-
+def sortAndDisplay():
+    sortStopsQuick(0, len(stopCounts) - 1)
+    fig, ax = plt.subplots()
+    ax.bar(stopNames, stopCounts)
+    ax.set_xlabel("Stops")
+    ax.set_ylabel("Count")
+    ax.set_title("Sorted Stop Counts")
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    return fig
 
 with gr.Blocks() as app:
     with gr.Row():
@@ -51,9 +59,12 @@ with gr.Blocks() as app:
     add_btn = gr.Button("Add Stop")
     remove_in = gr.Textbox(label="Remove Stop by Name")
     remove_btn = gr.Button("Remove Stop")
+    sort_in = gr.Textbox(label = "Sort Stops by Crowd")
+    sort_btn = gr.Button("Sort Stops")
     chart = gr.Plot()
 
     add_btn.click(addStop, [name_in, count_in], chart)
     remove_btn.click(removeStop, remove_in, chart)
+    sort_btn.click(sortAndDisplay, None, chart)
 
 app.launch()
