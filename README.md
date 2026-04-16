@@ -1,4 +1,7 @@
 # CISC-121-Project
+Why Quicksort?:
+
+Enforcement & User Visuals
 
 Problem Decomposition:
 
