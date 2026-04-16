@@ -29,12 +29,38 @@ position identified by the code, and the purple bar represents where the pointer
 by the presence of both a pink and purple highlight, by which after the pink highlight dissapears, signifies the completion of the swap. 
 
 Problem Decomposition:
+In this project, I identified four key segments that I had to address, being user inputs, the sorting function, outputs, and gradio setup/display.
+In the user inputs section, I divided that problem into three smaller segments, being the interface elements for user interaction, 
+functionality of the interface elements, and the storage of data that the user enters. In the sorting function, I divided the problem into three main
+steps, which is the base case, the process that executes, and the recursive calls. Within the process, it was further broken down into identifying
+the pivot, identifying situations where there is a swap, and then the swapping of datapoints based on the principles of a quicksort. Outputs were
+divided into two main segments that i wanted to figure out, being visual outputs, and data outputs from each function. Finally, the gradio setup/display
+was divided into two main problems I wanted to address, being how to set up the display such that the gradio would function if it were present, and 
+how to organise all the buttons such that it looked visually appealing, and would be easily figured out by users. 
 
 Pattern Recognition:
+Within the quicksort algorithm, there are five main patterns that are addressed. The pivot is repeatedly chosen as the middle of the array, or 
+subarray within the subsequent recursive calls. The partitioning is done using two pointers, one of which points to the next best pivot
+location, and the other pointer goes through each element, and decides whether or not it needs to be swapped to a position behind the first
+pointer. The two arrays are both synchronised in parallel, to make sure that stop names and stop counts line up together. The entire process I 
+outlined is repeated in each subsequent recursive call, in which both sides of the array after the pivot is put back in place is sorted again. 
+Finally, the last thing that repeats constantly is the framesnapshots which send data back to Gradio for use in the display functions. 
 
-Abstraction
+Abstraction:
+The things that should be shown to the user should simply be the inputs and the outputs. They should only be able to see what they inputted, 
+the current data as is, the best locaiton to send a shuttle, and the sorting process. They should not be able to see the gradio display update process,
+nor the process of plotting the data. Additionally, they should not be able to see how exactly data is being cleared, added to, or removed from the 
+dataset, where they should not be abel to see what could trigger error messages etc. 
 
-Algorithmic Design
+Algorithmic Design:
+The inputs required are the stops with the stop count, stop removal, clearing stops, resetting the stops to the default demo values, and the 
+button that allows one to sort the stops. Each would have it's own functions, in which the processes would run, and output the graph's animations
+playing out, and the newest optimal stop to send a shuttle bus to. With regard to the GUI, it should be organised such that the option to add 
+stops comes first, with the stop name and stop crowd count inputs being in a row next to one another, and a button below it to input it into the database.
+There should be the option to just set it to the default demo values, which is a button below that. And even below that, there should be an input
+textbox that allows users to type in a stop they want to remove by name, and then the button to execute that function. Finally, at the very bottom, there
+should be an option to clear the entire array, and a button to sort. Before the clear button, there should be a display showing where the optimal stop is. And
+finally, at the very bottom, there should be a visual display of how the quicksort is playing out, and where the data is. 
 
 Flowchart:
 
