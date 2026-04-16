@@ -5,10 +5,24 @@ from matplotlib.patches import Patch
 
 stopNames = []
 stopCounts = []
+defaultStopNames = ["Guthrie at Joyce", "242 Guthrie Dr.", "Guthrie at Karlee", "118 Virginia St.", "80 Virginia St.", "Virginia at Sutherland", "Sutherland at Guthrie", "Sutherland at Conacher", "Conacher at Morenz", "Conacher at Wilson", "235 Conacher Dr.", "Conacher at Nicholas", "Benson at Division", "Division at First Canada", "John Counter at Rigney", "Bus Terminal", "Elliott at Douglas", "Elliott at Rockford", "Elliott at Division", "Division at Kirkpatrick", "Division at Barbara", "Division at Railway", "Division at Fraser", "Division at Guy", "Division at Adelaide", "Division at Pine", "Division at York", "Division at Colborne", "Princess at Barrie", "270 Princess St.", "Downtown", "Bagot at Johnson", "Bagot at Earl", "Bagot at West", "Stuart at Arch", "Queen's at Kingston General Hospital", "Grant Hall", "Union at Alfred", "Union at Albert", "Union at Victoria", "Union at Willingdon", "Union at Pembroke", "Queen's West Campus", "Union at Yonge", "King at Mowat", "King at McDonald", "King at Portsmouth", "Portsmouth at Baiden", "Portsmouth at Calderwood", "St. Lawrence College", "Southeast Public Health", "Portsmouth at Johnson", "Portsmouth at Miles", "Portsmouth at Van Order", "Portsmouth at Elmwood", "Portsmouth at Phillips", "Portsmouth at Fairview", "Portsmouth at Valleyview", "Portsmouth at Howard", "Portsmouth at Hampstead", "Portsmouth at Glengarry", "Portsmouth at Old Quarry", "VIA Rail Station"]
+defaultStopCounts = [8, 5, 4, 4, 3, 4, 3, 4, 3, 3, 3, 4, 5, 6, 5, 35, 8, 6, 7, 8, 6, 6, 7, 6, 8, 7, 9, 10, 18, 14, 30, 10, 9, 8, 12, 28, 22, 12, 10, 9, 7, 7, 20, 8, 7, 6, 7, 6, 5, 40, 8, 5, 4, 4, 4, 5, 4, 4, 4, 4, 4, 5, 22]
 frames = []
 current_frame = [0]
 global optimalStop
 optimalStop = "None" 
+
+def revertToDefault():
+    stopNames.clear()
+    stopCounts.clear()
+    stopNames.extend(defaultStopNames)
+    stopCounts.extend(defaultStopCounts)
+    return plotStops()
+
+def emptyStops():
+    stopNames.clear()
+    stopCounts.clear()
+    return plotStops()
 
 def addStop(name, count):
     if not name or name.strip() == "":
@@ -96,23 +110,26 @@ def startSort():
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
         yield fig, f"<h1>Optimal stop to send shuttle: {optimalStop}</h1>"
-        time.sleep(1)
+        time.sleep(0.6)
 
 with gr.Blocks() as app:
     title = gr.HTML("<h1>Find Optimal Stop to Send Shuttle<h1>")
     with gr.Row():
         name_in = gr.Textbox(label="Stop Name")
         count_in = gr.Number(label="Crowd Count")
+    revert_btn = gr.Button("Set Stops to Kingston Transit #2 Demo")
     add_btn = gr.Button("Add Stop")
     remove_in = gr.Textbox(label="Remove Stop by Name")
     remove_btn = gr.Button("Remove Stop")
+    clear_btn = gr.Button("Clear Stops")
     recommendation = gr.HTML(f"<h1>Optimal stop to send shuttle: {optimalStop}<h1>")
     sort_btn = gr.Button("Sort Stops")
     chart = gr.Plot()
 
-
+    revert_btn.click(revertToDefault, None, chart)
     add_btn.click(addStop, [name_in, count_in], chart)
     remove_btn.click(removeStop, remove_in, chart)
+    clear_btn.click(emptyStops, None, chart)
     sort_btn.click(startSort, None, [chart, recommendation])
     
 app.launch()
