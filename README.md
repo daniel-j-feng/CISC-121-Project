@@ -84,3 +84,11 @@ Actual: Error thrown, 'Stop already exists'
 Test Run Videos:
 Test two run video (view the code files on GITHUB):
 <video controls src="20260416-0349-36.9741334.mp4" title="Title"></video>
+
+## Steps to Run
+Install gradio, matplot, and time through the terminal
+Run python3 app.py on terminal (from codespace)
+
+## Hugging Face Link
+
+## Author & AI Acknowledgment
