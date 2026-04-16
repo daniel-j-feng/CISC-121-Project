@@ -1,3 +1,17 @@
+---
+title: {{title}}
+emoji: {{emoji}}
+colorFrom: {{colorFrom}}
+colorTo: {{colorTo}}
+sdk: {{sdk}}
+sdk_version: "{{sdkVersion}}"
+{{#pythonVersion}}
+python_version: "{{pythonVersion}}"
+{{/pythonVersion}}
+app_file: app.py
+pinned: false
+---
+
 # CISC-121-Project
 Problem: Looking for optimal stop to send additional shuttle bus.
 
@@ -90,5 +104,7 @@ Install gradio, matplot, and time through the terminal
 Run python3 app.py on terminal (from codespace)
 
 ## Hugging Face Link
+https://huggingface.co/spaces/danieljfeng/CISC121Project
 
 ## Author & AI Acknowledgment
+AI was used to help aid with the understanding of gradio, and chart outputs. Ai was also used to diagnose and solve errors. AI was not used for logic, nor the writing of any of the breakdowns and problem solving aspects. AI was also used to figure out how to get hugging face to work. 
