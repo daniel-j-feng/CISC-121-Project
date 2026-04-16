@@ -7,22 +7,31 @@ stopNames = []
 stopCounts = []
 frames = []
 current_frame = [0]
+global optimalStop
+optimalStop = "None" 
 
 def addStop(name, count):
-    if name in stopNames:
-        raise gr.Error("Stop Already Exists")
-        return plotStops()
-    else:
-        stopNames.append(name)
-        stopCounts.append(count)
-        return plotStops()
+    if not name or name.strip() == "":
+        raise gr.Error("Please enter a stop name")
+    if count is None:
+        raise gr.Error("Please enter a crowd count")
+    if count != int(count) or count < 0:
+        raise gr.Error("Whole numbers only!")
+    for i in range(len(stopNames)):
+        if name == stopNames[i]:
+            raise gr.Error("Stop Already Exists")
+    stopNames.append(name)
+    stopCounts.append(int(count))
+    return plotStops()
 
 def removeStop(name):
-    if name in stopNames:
-        idx = stopNames.index(name)
-        stopNames.pop(idx)
-        stopCounts.pop(idx)
-    return plotStops()
+    for i in range(len(stopNames)):
+        if name == stopNames[i]:
+            idx = stopNames.index(name)
+            stopNames.pop(idx)
+            stopCounts.pop(idx)
+            return plotStops()
+    raise gr.Error("Stop Does Not Exist")
 
 def plotStops():
     fig, ax = plt.subplots()
@@ -56,7 +65,12 @@ def startSort():
     frames.clear()
     current_frame[0] = 0
     sortStopsQuick(0, len(stopCounts) - 1)
-    
+    optimalStop = stopNames[-1]
+
+    if not frames: 
+        yield plotStops(), f"<h1>Optimal stop to send shuttle: {optimalStop}</h1>"
+        return
+
     for frame in frames:
         data, names, looking, swap1, swap2, pivot, justSwapped = frame
         colors = []
@@ -81,22 +95,24 @@ def startSort():
         ax.legend(handles=legend_elements, loc='upper left')
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
-        yield fig
+        yield fig, f"<h1>Optimal stop to send shuttle: {optimalStop}</h1>"
         time.sleep(1)
 
 with gr.Blocks() as app:
+    title = gr.HTML("<h1>Find Optimal Stop to Send Shuttle<h1>")
     with gr.Row():
         name_in = gr.Textbox(label="Stop Name")
         count_in = gr.Number(label="Crowd Count")
     add_btn = gr.Button("Add Stop")
     remove_in = gr.Textbox(label="Remove Stop by Name")
     remove_btn = gr.Button("Remove Stop")
-    sort_in = gr.Textbox(label = "Sort Stops by Crowd")
+    recommendation = gr.HTML(f"<h1>Optimal stop to send shuttle: {optimalStop}<h1>")
     sort_btn = gr.Button("Sort Stops")
     chart = gr.Plot()
 
+
     add_btn.click(addStop, [name_in, count_in], chart)
     remove_btn.click(removeStop, remove_in, chart)
-    sort_btn.click(startSort, None, chart)
+    sort_btn.click(startSort, None, [chart, recommendation])
     
 app.launch()
