@@ -1,4 +1,6 @@
 # CISC-121-Project
+Problem: Looking for optimal stop to send additional shuttle bus.
+
 Why Quicksort?:
 Quicksort was selected due to it's implace sorting functionalities, and ease of visualisation. 
 Quicksort has a lower space complexity, which means that there are less things stored, and less copies that are created
