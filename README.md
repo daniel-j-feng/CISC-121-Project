@@ -62,9 +62,23 @@ textbox that allows users to type in a stop they want to remove by name, and the
 should be an option to clear the entire array, and a button to sort. Before the clear button, there should be a display showing where the optimal stop is. And
 finally, at the very bottom, there should be a visual display of how the quicksort is playing out, and where the data is. 
 
-Flowchart:
-
 Testing:
+Test One: Inputting a negative number into the array.
+Expected: Error thrown
+Actual: Negative number got into the array, and upon the pressing of the sort button, the function broke, and threw a default gradio error.
+
+Test Two: Interrupting the sort by pressing the sort button and then pressing another button such as clear array before the sort display has finished up with it's activities
+Expected: Sorting display clears, and new display comes in
+Actual: Sorting display disappears for a moment, and then comes right back in
+
+Test Three: Trying to add a stop that does not have a name.
+Expected: Error thrown, 'Please enter a stop name'
+Actual: Error thrown, 'Please enter a stop name'
+
+Test Four: Trying to add a stop with the same name as another stop that already exists
+Expected: Error thrown, 'Stop already exists'
+Actual: Error thrown, 'Stop already exists'
 
 Test Run Videos:
-
+Test two run video (view the code files on GITHUB):
+<video controls src="20260416-0349-36.9741334.mp4" title="Title"></video>
